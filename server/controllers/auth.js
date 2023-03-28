@@ -42,7 +42,6 @@ export const registration  = async (req, res) => {
         res.status(401).json({
             message: 'Ошибка при регистрации нового пользователя'
         })
-        console.log('registration error')
     }
 }
 

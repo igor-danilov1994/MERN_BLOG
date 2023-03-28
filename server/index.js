@@ -3,6 +3,7 @@ import mongoose from 'mongoose'
 import dotenv from 'dotenv'
 import cors from 'cors'
 import authRout from "./routes/auth.js";
+import postRout from "./routes/posts.js";
 
 const app = express()
 dotenv.config()
@@ -21,6 +22,7 @@ app.use(express.json())
 
 // Routes
 app.use('/api/auth', authRout)
+app.use('/api/post', postRout)
 
 
 async function start ()  {
