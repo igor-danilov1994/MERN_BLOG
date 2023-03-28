@@ -20,7 +20,7 @@ app.use(cors())
 app.use(express.json())
 
 // Routes
-app.use('/app/auth', authRout)
+app.use('/api/auth', authRout)
 
 
 async function start ()  {
