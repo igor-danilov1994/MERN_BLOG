@@ -3,47 +3,51 @@ import User from "../model/User.js";
 import path, { dirname } from 'path'
 import { fileURLToPath } from 'url'
 
-// Create post
+// Create Post
 export const createPost = async (req, res) => {
     try {
         const { title, text } = req.body
-        const user = await User.findOne(req.userId)
+        const user = await User.findOne(req.userId) // Waiting
 
-        if (req.files){
+        if (req.files) {
             let fileName = Date.now().toString() + req.files.image.name
             const __dirname = dirname(fileURLToPath(import.meta.url))
-            req.files.image.mv(path.join(__dirname, '..', 'uploads', fileName))
+            await req.files.image.mv(path.join(__dirname, '..', 'uploads', fileName))
 
-            const newPostWithImg = new Post({
+
+            const newPostWithImage = new Post({
                 username: user.username,
                 title,
                 text,
                 imgUrl: fileName,
-                author: req.userId
+                author: user._id,
             })
 
-            await newPostWithImg.save()
+
+            await newPostWithImage.save()
+
             await User.findByIdAndUpdate(req.userId, {
-                $push: { posts: newPostWithImg }
+                $push: { posts: newPostWithImage },
             })
 
-            return res.json(newPostWithImg)
+            return res.json(newPostWithImage)
         }
 
-        const newPostWithOutImg = new Post({
+        const newPostWithoutImage = new Post({
             username: user.username,
             title,
             text,
             imgUrl: '',
-            author: req.userId
+            author: req.userId,
         })
 
-        await newPostWithOutImg.save()
+        await newPostWithoutImage.save()
         await User.findByIdAndUpdate(req.userId, {
-            $push: { posts: newPostWithOutImg }
+            $push: { posts: newPostWithoutImage },
         })
-        res.json(newPostWithOutImg)
+
+        res.json(newPostWithoutImage)
     } catch (error) {
-        res.json({ message: 'Что то пошло не так' })
+        res.status(404).json({ message: 'Что-то пошло не так.' })
     }
 }

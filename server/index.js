@@ -2,6 +2,7 @@ import express from 'express'
 import mongoose from 'mongoose'
 import dotenv from 'dotenv'
 import cors from 'cors'
+import fileUpload from 'express-fileupload'
 import authRout from "./routes/auth.js";
 import postRout from "./routes/posts.js";
 
@@ -18,11 +19,13 @@ const DB_URL = `mongodb+srv://${DB_USER}:${DB_PASS}@cluster0.nzgd0mj.mongodb.net
 
 // Middleware
 app.use(cors())
+app.use(fileUpload())
 app.use(express.json())
+app.use(express.static('uploads'))
 
 // Routes
 app.use('/api/auth', authRout)
-app.use('/api/post', postRout)
+app.use('/api/posts', postRout)
 
 
 async function start ()  {
